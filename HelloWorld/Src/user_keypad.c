@@ -88,10 +88,18 @@ uint8_t mapping[4][4] = {
 uint8_t USER_Key( void ){
     // Sweep through the matrix
     for (uint8_t i = 0; i < 4; i++) {
-        if (!rows[i].port->ODR) continue;
+        
+        // Pull all rows high
+        for (uint8_t j = 0; j < 4; j++) {
+            rows[j].port->ODR |= rows[j].mask;
+        }
+
+        // Pull current row low
+        rows[i].port->ODR &= ~rows[j].mask;
 
         for (uint8_t j = 0; j < 4; j++) {
-            if (cols[j].port->IDR) {
+            // Check if button is pressed
+            if ( !(cols[j].port->IDR & cols[j].mask) ) {
                 return mapping[i][j];
             }
         }
