@@ -27,7 +27,7 @@ int main(void)
 		if (key != '\0') {
 			// Turn on corresponding LEDS
 			for (uint8_t i = 0; i < 4; i++) {
-				if (key & ( i << 1U )) {
+				if (key & ( 1U << i )) {
 					LEDS[i].port->ODR |= LEDS[i].mask;
 				}
 			}
