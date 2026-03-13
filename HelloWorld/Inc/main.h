@@ -41,18 +41,28 @@ typedef struct
 	volatile uint32_t LCKR;
 } GPIO_TypeDef;
 
+/* Components of a pin's definition */
+typedef struct 
+{
+    GPIO_TypeDef* port;  // Pointer to the hardware port (GPIOA, GPIOB, etc.)
+    uint32_t mask;   // The specific bit we want to control
+} Pin;
+
 #define FLASH_BASE	0x40022000UL//		FLASH base address
 #define RCC_BASE	0x40021000UL//		RCC base address
 #define GPIOA_BASE	0x40010800UL//		GPIO Port A base address
-#define GPIOB_BASE  0x40010C00UL
+#define GPIOB_BASE  0x40010C00UL// 		GPIO Port B base address
+#define GPIOC_BASE  0x40011000UL// 		GPIO Port C base address
 
 #define FLASH		(( FLASH_TypeDef *)FLASH_BASE )// 	FLASH base address points to FLASH structure
 #define RCC         (( RCC_TypeDef *)RCC_BASE )//		RCC base address points to RCC structure
 #define GPIOA		(( GPIO_TypeDef *)GPIOA_BASE )//	GPIO Port A base address points to GPIO structure
-#define GPIOB		(( GPIO_TypeDef *)GPIOB_BASE )
+#define GPIOB		(( GPIO_TypeDef *)GPIOB_BASE )//	GPIO Port B base address points to GPIO structure
+#define GPIOC		(( GPIO_TypeDef *)GPIOC_BASE )//	GPIO Port C base address points to GPIO structure
 
 void USER_SystemClock_Config( void );
 void USER_GPIO_Init( void );
 void USER_Delay_1sec( void );
+void USER_Delay_50ms( void );
 
 #endif /* MAIN_H_ */

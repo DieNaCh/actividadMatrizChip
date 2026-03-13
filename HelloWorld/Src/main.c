@@ -2,6 +2,15 @@
 /* Libraries, Definitions and Global Declarations */
 #include <stdint.h> // 							standard integer library
 #include "main.h"
+#include "user_keypad.h"
+
+// Array of our 4 LEDs mapped to their physical hardware addresses
+Pin LEDS[4] = {
+    { GPIOA, (0x1UL << 9U) }, // LED 0
+    { GPIOC, (0x1UL << 7U) }, // LED 1
+    { GPIOB, (0x1UL << 6U) }, // LED 2
+    { GPIOA, (0x1UL << 7U) }  // LED 3
+};
 
 /* Superloop structure */
 int main(void)
@@ -9,10 +18,28 @@ int main(void)
 	/* Declarations and Initializations */
 	USER_SystemClock_Config( ); // 				configure the system clock to 64 MHz
 	USER_GPIO_Init( ); // 						initialize GPIOA pin 5 as output (for LD2)
-    /* Repetitive block */
+    USER_Keypad_Init( ); //						initialize keypad rows as output and columns as input
+	
+	/* Repetitive block */
     for(;;){
-    	GPIOA->ODR	^=	( 0x1UL <<  5U );//		value to toggle pin 5 of Port A (Toggle LD2)
-    	USER_Delay_1sec( ); // 					delay function to create a visible blinking effect on LD2
+		uint8_t key = USER_Key( );
+
+		if (key != '\0') {
+			// Turn on corresponding LEDS
+			for (uint8_t i = 0; i < 4; i++) {
+				if (key & ( i << 1U )) {
+					LEDS[i].port->ODR |= LEDS[i].mask;
+				}
+			}
+		}
+		else {
+			// Clear all bits
+			for (uint8_t i = 0; i < 4; i++) {
+				LEDS[i].port->ODR &= ~LEDS[i].mask;
+			}
+		}
+
+		USER_Delay_50ms( );
     }
 }
 
@@ -38,6 +65,37 @@ void USER_GPIO_Init( void ){
 	GPIOA->CRL		=	GPIOA->CRL//			GPIOx_CRL actual value
 					|//							to set
 					( 0x1UL << 20U );//			(mask) MODE5_0 bit
+	
+
+	// LEDs, from most significant bit to least significant bit
+	// As push-pull output
+	// CNF[1:0] = 00
+    // MODE[1:0] = 01
+    // ODR = 0 or 1
+
+	// PA9
+	GPIOA->ODR &=		~( 0x1UL <<  9U );
+	GPIOA->CRH &= 		~( 0x3UL <<  6U )
+				&		~( 0x2UL <<  4U );
+	GPIOA->CRH |=		 ( 0x1UL <<  4U );
+
+	// PC7
+	GPIOC->ODR &=		~( 0x1UL <<  7U );
+	GPIOC->CRL &= 		~( 0x3UL << 30U )
+				&		~( 0x2UL << 28U );
+	GPIOC->CRL |=		 ( 0x1UL << 28U );
+
+	// PB6
+	GPIOB->ODR &=		~( 0x1UL <<  6U );
+	GPIOB->CRL &= 		~( 0x3UL << 26U )
+				&		~( 0x2UL << 24U );
+	GPIOB->CRL |=		 ( 0x1UL << 24U );
+
+	// PA7
+	GPIOA->ODR &=		~( 0x1UL <<  7U );
+	GPIOA->CRL &= 		~( 0x3UL << 30U )
+				&		~( 0x2UL << 28U );
+	GPIOA->CRL |=		 ( 0x1UL << 28U );
 }
 
 void USER_SystemClock_Config( void ){
@@ -57,8 +115,21 @@ void USER_SystemClock_Config( void ){
 
 void USER_Delay_1sec( void ){
 	__asm(" 		ldr r0, =7111111UL	");//	load the value to be used as delay count
-	__asm(" again:	sub r0, r0, #1		");//	decrement the delay count
+	__asm(" again1:	sub r0, r0, #1		");//	decrement the delay count
 	__asm("			cmp r0, #0			");//	check if the delay count has reached zero
-	__asm("			bne again			");//	if not, repeat the process
+	__asm("			bne again1			");//	if not, repeat the process
 	__asm("			nop					");//	no operation (to ensure exact timing)
+}
+
+void USER_Delay_50ms( void ){
+	__asm(" 			ldr r0, =355555UL	");//	load the value to be used as delay count
+	__asm(" again50:	sub r0, r0, #1		");//	decrement the delay count
+	__asm("				cmp r0, #0			");//	check if the delay count has reached zero
+	__asm("				bne again50			");//	if not, repeat the process
+	__asm("				nop					");//	no operation (to ensure exact timing)
+	__asm("				nop					");//	no operation (to ensure exact timing)
+	__asm("				nop					");//	no operation (to ensure exact timing)
+	__asm("				nop					");//	no operation (to ensure exact timing)
+	__asm("				nop					");//	no operation (to ensure exact timing)
+	__asm("				nop					");//	no operation (to ensure exact timing)
 }
