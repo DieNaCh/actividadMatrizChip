@@ -25,21 +25,26 @@ int main(void)
 		uint8_t key = USER_Key( );
 
 		if (key != '\0') {
-			// Turn on corresponding LEDS
-			for (uint8_t i = 0; i < 4; i++) {
-				if (key & ( 1U << i )) {
-					LEDS[i].port->ODR |= LEDS[i].mask;
-				}
-			}
-		}
-		else {
-			// Clear all bits
-			for (uint8_t i = 0; i < 4; i++) {
-				LEDS[i].port->ODR &= ~LEDS[i].mask;
-			}
-		}
+			// Validate the press occurred
+			USER_Delay_10ms();
 
-		USER_Delay_50ms( );
+			if (USER_Key() == key) {
+				// Clear LEDs
+				for (uint8_t i = 0; i < 4; i++) {
+					LEDS[i].port->ODR &= ~LEDS[i].mask;
+				}
+
+				// Turn on corresponding LEDS
+				for (uint8_t i = 0; i < 4; i++) {
+					if (key & ( 1U << i )) {
+						LEDS[i].port->ODR |= LEDS[i].mask;
+					}
+				}
+
+				while (USER_Key()); // Wait for release
+				USER_Delay_10ms();
+			}
+		}
     }
 }
 
@@ -121,15 +126,10 @@ void USER_Delay_1sec( void ){
 	__asm("			nop					");//	no operation (to ensure exact timing)
 }
 
-void USER_Delay_50ms( void ){
-	__asm(" 			ldr r0, =355555UL	");//	load the value to be used as delay count
-	__asm(" again50:	sub r0, r0, #1		");//	decrement the delay count
+void USER_Delay_10ms( void ){
+	__asm(" 			ldr r0, =71111UL	");//	load the value to be used as delay count
+	__asm(" again10:	sub r0, r0, #1		");//	decrement the delay count
 	__asm("				cmp r0, #0			");//	check if the delay count has reached zero
-	__asm("				bne again50			");//	if not, repeat the process
-	__asm("				nop					");//	no operation (to ensure exact timing)
-	__asm("				nop					");//	no operation (to ensure exact timing)
-	__asm("				nop					");//	no operation (to ensure exact timing)
-	__asm("				nop					");//	no operation (to ensure exact timing)
-	__asm("				nop					");//	no operation (to ensure exact timing)
+	__asm("				bne again10			");//	if not, repeat the process
 	__asm("				nop					");//	no operation (to ensure exact timing)
 }
