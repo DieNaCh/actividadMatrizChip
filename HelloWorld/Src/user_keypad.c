@@ -11,23 +11,23 @@ void USER_Keypad_Init( void ){
     // MODE[1:0] = 01
     // ODR = 0 or 1
 
-    // PA3
-    GPIOA->ODR  &=      ~( 0x1UL <<  3U );
-    GPIOA->CRL  &=      ~( 0x3UL << 14U )
-                &       ~( 0x2UL << 12U );
-    GPIOA->CRL  |=       ( 0x1UL << 12U );
+    // PB0
+    GPIOB->ODR  &=      ~( 0x1UL <<  0U );
+    GPIOB->CRL  &=      ~( 0x3UL <<  2U )
+                &       ~( 0x2UL <<  0U );
+    GPIOB->CRL  |=       ( 0x1UL <<  0U );
     
-    // PA2
-    GPIOA->ODR  &=      ~( 0x1UL <<  2U );
-    GPIOA->CRL  &=      ~( 0x3UL << 10U )
-                &       ~( 0x2UL <<  8U );
-    GPIOA->CRL  |=       ( 0x1UL <<  8U );
+    // PB1
+    GPIOB->ODR  &=      ~( 0x1UL <<  1U );
+    GPIOB->CRL  &=      ~( 0x3UL <<  6U )
+                &       ~( 0x2UL <<  4U );
+    GPIOB->CRL  |=       ( 0x1UL <<  4U );
 
-    // PA10
-    GPIOA->ODR  &=      ~( 0x1UL << 10U );
-    GPIOA->CRH  &=      ~( 0x3UL << 10U )
+    // PB2
+    GPIOB->ODR  &=      ~( 0x1UL <<  2U );
+    GPIOB->CRL  &=      ~( 0x3UL << 10U )
                 &       ~( 0x2UL <<  8U );
-    GPIOA->CRH  |=       ( 0x1UL <<  8U );
+    GPIOB->CRL  |=       ( 0x1UL <<  8U );
     
     // PB3
     GPIOB->ODR  &=      ~( 0x1UL <<  3U );
@@ -40,40 +40,43 @@ void USER_Keypad_Init( void ){
     // MODE[1:0] = 00
     // ODR = 1
 
-    // PB5
-    GPIOB->ODR  |=      ( 0x1UL <<  5U );
-    GPIOB->CRL  &=      ( 0x1UL << 22U )
-                &       ( 0x3UL << 20U );
-    GPIOB->CRL  |=      ( 0x2UL << 22U );
     // PB4
     GPIOB->ODR  |=      ( 0x1UL <<  4U );
     GPIOB->CRL  &=      ( 0x1UL << 18U )
                 &       ( 0x3UL << 16U );
     GPIOB->CRL  |=      ( 0x2UL << 18U );
-    // PB10
-    GPIOB->ODR  |=      ( 0x1UL << 10U );
-    GPIOB->CRH  &=      ( 0x1UL << 10U )
-                &       ( 0x3UL <<  8U );
-    GPIOB->CRH  |=      ( 0x2UL << 10U );
-    // PA8
-    GPIOA->ODR  |=      ( 0x1UL <<  8U );
-    GPIOA->CRH  &=      ( 0x1UL <<  2U )
-                &       ( 0x3UL <<  0U );
-    GPIOA->CRH  |=      ( 0x2UL <<  2U );
+    
+    // PB5
+    GPIOB->ODR  |=      ( 0x1UL <<  5U );
+    GPIOB->CRL  &=      ( 0x1UL << 22U )
+                &       ( 0x3UL << 20U );
+    GPIOB->CRL  |=      ( 0x2UL << 22U );
+    
+    // PB6
+    GPIOB->ODR  |=      ( 0x1UL <<  6U );
+    GPIOB->CRL  &=      ( 0x1UL << 26U )
+                &       ( 0x3UL << 24U );
+    GPIOB->CRL  |=      ( 0x2UL << 26U );
+    
+    // PB7
+    GPIOB->ODR  |=      ( 0x1UL <<  7U );
+    GPIOB->CRL  &=      ( 0x1UL << 30U )
+                &       ( 0x3UL << 28U );
+    GPIOB->CRL  |=      ( 0x2UL << 30U );
 }
 
 Pin rows[4] = { 
-    { GPIOA, ( 0x1UL <<  3U ) }, 
-    { GPIOA, ( 0x1UL <<  2U ) },
-    { GPIOA, ( 0x1UL << 10U ) },
+    { GPIOB, ( 0x1UL <<  0U ) }, 
+    { GPIOB, ( 0x1UL <<  1U ) },
+    { GPIOB, ( 0x1UL <<  2U ) },
     { GPIOB, ( 0x1UL <<  3U ) }
 };
 
 Pin cols[4] = { 
-    { GPIOB, ( 0x1UL <<  5U ) }, 
-    { GPIOB, ( 0x1UL <<  4U ) },
-    { GPIOB, ( 0x1UL << 10U ) },
-    { GPIOA, ( 0x1UL <<  8U ) }
+    { GPIOB, ( 0x1UL <<  4U ) }, 
+    { GPIOB, ( 0x1UL <<  5U ) },
+    { GPIOB, ( 0x1UL <<  6U ) },
+    { GPIOB, ( 0x1UL <<  7U ) }
 };
 
 uint8_t mapping[4][4] = {

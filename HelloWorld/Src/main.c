@@ -6,10 +6,10 @@
 
 // Array of our 4 LEDs mapped to their physical hardware addresses
 Pin LEDS[4] = {
-    { GPIOA, (0x1UL << 9U) }, // LED 0
-    { GPIOC, (0x1UL << 7U) }, // LED 1
-    { GPIOB, (0x1UL << 6U) }, // LED 2
-    { GPIOA, (0x1UL << 7U) }  // LED 3
+    { GPIOB, (0x1UL <<  8U) }, // LED 0
+    { GPIOB, (0x1UL <<  9U) }, // LED 1
+    { GPIOB, (0x1UL << 10U) }, // LED 2
+    { GPIOB, (0x1UL << 11U) }  // LED 3
 };
 
 /* Superloop structure */
@@ -78,29 +78,29 @@ void USER_GPIO_Init( void ){
     // MODE[1:0] = 01
     // ODR = 0 or 1
 
-	// PA9
-	GPIOA->ODR &=		~( 0x1UL <<  9U );
-	GPIOA->CRH &= 		~( 0x3UL <<  6U )
+	// PB8
+	GPIOB->ODR &=		~( 0x1UL <<  8U );
+	GPIOB->CRH &= 		~( 0x3UL <<  2U )
+				&		~( 0x2UL <<  0U );
+	GPIOB->CRH |=		 ( 0x1UL <<  0U );
+
+	// PB9
+	GPIOB->ODR &=		~( 0x1UL <<  9U );
+	GPIOB->CRH &= 		~( 0x3UL <<  6U )
 				&		~( 0x2UL <<  4U );
-	GPIOA->CRH |=		 ( 0x1UL <<  4U );
+	GPIOB->CRH |=		 ( 0x1UL <<  4U );
 
-	// PC7
-	GPIOC->ODR &=		~( 0x1UL <<  7U );
-	GPIOC->CRL &= 		~( 0x3UL << 30U )
-				&		~( 0x2UL << 28U );
-	GPIOC->CRL |=		 ( 0x1UL << 28U );
+	// PB10
+	GPIOB->ODR &=		~( 0x1UL << 10U );
+	GPIOB->CRH &= 		~( 0x3UL << 10U )
+				&		~( 0x2UL <<  8U );
+	GPIOB->CRH |=		 ( 0x1UL <<  8U );
 
-	// PB6
-	GPIOB->ODR &=		~( 0x1UL <<  6U );
-	GPIOB->CRL &= 		~( 0x3UL << 26U )
-				&		~( 0x2UL << 24U );
-	GPIOB->CRL |=		 ( 0x1UL << 24U );
-
-	// PA7
-	GPIOA->ODR &=		~( 0x1UL <<  7U );
-	GPIOA->CRL &= 		~( 0x3UL << 30U )
-				&		~( 0x2UL << 28U );
-	GPIOA->CRL |=		 ( 0x1UL << 28U );
+	// PB11
+	GPIOB->ODR &=		~( 0x1UL << 11U );
+	GPIOB->CRH &= 		~( 0x3UL << 14U )
+				&		~( 0x2UL << 12U );
+	GPIOB->CRH |=		 ( 0x1UL << 12U );
 }
 
 void USER_SystemClock_Config( void ){
