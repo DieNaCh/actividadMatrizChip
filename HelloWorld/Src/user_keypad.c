@@ -98,7 +98,7 @@ uint8_t USER_Key( void ){
         }
 
         // Pull current row low
-        rows[i].port->ODR &= ~rows[j].mask;
+        rows[i].port->ODR &= ~rows[i].mask;
 
         for (uint8_t j = 0; j < 4; j++) {
             // Check if button is pressed
