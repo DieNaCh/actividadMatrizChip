@@ -63,6 +63,36 @@ void USER_Keypad_Init( void ){
     GPIOB->CRL  &=      ~( 0x1UL << 30U )
                 &       ~( 0x3UL << 28U );
     GPIOB->CRL  |=       ( 0x2UL << 30U );
+
+    // LEDs, from most significant bit to least significant bit
+	// As push-pull output
+	// CNF[1:0] = 00
+    // MODE[1:0] = 01
+    // ODR = 0 or 1
+
+	// PB8
+	GPIOB->ODR &=		~( 0x1UL <<  8U );
+	GPIOB->CRH &= 		~( 0x3UL <<  2U )
+				&		~( 0x2UL <<  0U );
+	GPIOB->CRH |=		 ( 0x1UL <<  0U );
+
+	// PB9
+	GPIOB->ODR &=		~( 0x1UL <<  9U );
+	GPIOB->CRH &= 		~( 0x3UL <<  6U )
+				&		~( 0x2UL <<  4U );
+	GPIOB->CRH |=		 ( 0x1UL <<  4U );
+
+	// PB10
+	GPIOB->ODR &=		~( 0x1UL << 10U );
+	GPIOB->CRH &= 		~( 0x3UL << 10U )
+				&		~( 0x2UL <<  8U );
+	GPIOB->CRH |=		 ( 0x1UL <<  8U );
+
+	// PB11
+	GPIOB->ODR &=		~( 0x1UL << 11U );
+	GPIOB->CRH &= 		~( 0x3UL << 14U )
+				&		~( 0x2UL << 12U );
+	GPIOB->CRH |=		 ( 0x1UL << 12U );
 }
 
 // Row and column physical address arrays
