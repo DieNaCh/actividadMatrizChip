@@ -59,8 +59,6 @@ typedef struct
 #define GPIOB		(( GPIO_TypeDef *)GPIOB_BASE )//	GPIO Port B base address points to GPIO structure
 
 void USER_SystemClock_Config( void );
-void USER_GPIO_Init( void );
-void USER_Delay_1sec( void );
 void USER_Delay_10ms( void );
 
 #endif /* MAIN_H_ */
