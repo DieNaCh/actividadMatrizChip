@@ -6,10 +6,10 @@
 
 // Array of our 4 LEDs mapped to their physical hardware addresses
 Pin LEDS[4] = {
-    { GPIOB, (0x1UL <<  8U) }, // LED 0
-    { GPIOB, (0x1UL <<  9U) }, // LED 1
+    { GPIOB, (0x1UL << 11U) }, // LED 3
     { GPIOB, (0x1UL << 10U) }, // LED 2
-    { GPIOB, (0x1UL << 11U) }  // LED 3
+    { GPIOB, (0x1UL <<  9U) }, // LED 1
+    { GPIOB, (0x1UL <<  8U) }  // LED 0
 };
 
 /* Superloop structure */
@@ -17,15 +17,16 @@ int main(void)
 {
 	/* Declarations and Initializations */
 	USER_SystemClock_Config( ); // 				configure the system clock to 64 MHz
-	USER_GPIO_Init( ); // 						initialize GPIOA pin 5 as output (for LD2)
-    USER_Keypad_Init( ); //						initialize keypad rows as output and columns as input
+	USER_Keypad_Init( ); //						initialize keypad rows as output and columns as input
+	USER_GPIO_Init( );
+    
 	
 	/* Repetitive block */
     for(;;){
 		uint8_t key = USER_Key( );
 
-		if (key != '\0') {
-			// Validate the press occurred
+		if (key != 0xFFU) {
+			// Validate the press occurred (debouncing)
 			USER_Delay_10ms();
 
 			if (USER_Key() == key) {
@@ -41,7 +42,7 @@ int main(void)
 					}
 				}
 
-				while (USER_Key()); // Wait for release
+				while (USER_Key() != 0xFFU); // Wait for release
 				USER_Delay_10ms();
 			}
 		}
@@ -71,7 +72,6 @@ void USER_GPIO_Init( void ){
 					|//							to set
 					( 0x1UL << 20U );//			(mask) MODE5_0 bit
 	
-
 	// LEDs, from most significant bit to least significant bit
 	// As push-pull output
 	// CNF[1:0] = 00
